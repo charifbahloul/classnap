@@ -1,44 +1,40 @@
 from Recorder import record
-from Analyzer import analyze, summarize
+from Analyzer import open_file, whisperStuff, summarize, load_model
+from tkinterFrontEnd import main as gui
 import concurrent.futures
 
-SUMMARIZE_PERIOD = 90
+RECORDING_PERIOD = 10
+SUMMARIZE_EVERY = 9 # Summarize every 9 recordings
 MODEL_NAME = "base.en"
+model = load_model(MODEL_NAME)
 
 def main():
-    futures = []
+    # futures = []
     # Clear the transcript.txt file
     with open("transcript.txt", "w") as f:
-        f.write("")
+        f.write("First recording...")
     # Clear the summary.txt file
     with open("summary.txt", "w") as f:
-        f.write("")
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        try:
-            while True:
-                record(SUMMARIZE_PERIOD)
+        f.write("First recording...")
 
-                # print("Simulating recording...")
-                # time.sleep(5)
-            
-                future = executor.submit(analyze, MODEL_NAME)
-                # futures.append(future)
+    executor = concurrent.futures.ThreadPoolExecutor()
 
-                # analyze()
-                # all_results.append(future.result())
-                # print(future.result())
-        except KeyboardInterrupt:
-            executor.shutdown(wait=False)
-            all_results = []
-            # for future in concurrent.futures.as_completed(futures):
-            #     all_results.append(future.result())
+    # Start the GUI
+    executor.submit(gui)
 
-            # Read all of the summaries from the summary.txt file
-            with open("summary.txt", "r") as f:
-                all_results = f.readlines()
-            all_results = '\n'.join(all_results) # Join all of the summaries into one string
-            print("Here's the summary of the whole thing: ")
-            summarize(all_results, 7)
+    counter = 0
+    while True:
+        record(RECORDING_PERIOD)
+        future = executor.submit(whisperStuff, model)
+        
+        if counter % SUMMARIZE_EVERY == 0:
+            # Read all of the transcripts from the transcript.txt file
+            with open("transcript.txt", "r") as f:
+                transcript = f.readlines()
+            transcript = '\n'.join(transcript)
+            summarize(transcript, num_points=3)
+
+        counter += 1
         
 if __name__ == "__main__":
     main()

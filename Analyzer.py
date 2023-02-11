@@ -12,6 +12,10 @@ def whisperStuff(model):
     result = model.transcribe(WAVE_OUTPUT_FILENAME, language = "english")["text"]
     # print(result)
     print("End whisper.")
+
+    with open("transcript.txt", "a") as f:
+        f.write(result)
+
     return result
 
 def summarize(transcript, num_points=3):
@@ -34,20 +38,26 @@ def summarize(transcript, num_points=3):
         temperature=0.3,
     )
 
-    return response["choices"][0]["text"]
+    summary = response["choices"][0]["text"]
 
-
-def analyze(model_name="base.en"):
-    model = load_model(model_name)
-    result = whisperStuff(model)
-    print(result)
-    # Save the transcript to a text file
-    with open("transcript.txt", "a") as f:
-        f.write(result)
-
-    summary = summarize(result)
-    print(summary)
-    # Save the summary to a text file
     with open("summary.txt", "a") as f:
         f.write(summary)
+
     return summary
+
+
+def open_file(file_name):
+    with open(file_name, "r") as f:
+        return f.read()
+
+# def analyze(model_name="base.en"):
+#     result = whisperStuff(model)
+#     print(result)
+#     # Save the transcript to a text file
+
+#     summary = summarize(result)
+#     print(summary)
+#     # Save the summary to a text file
+#     with open("summary.txt", "a") as f:
+#         f.write(summary)
+#     return summary

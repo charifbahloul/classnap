@@ -1,53 +1,41 @@
-# Make a tkinter app with a record button that when clicked alters recording.txt to 1.
-# When you press it twice, it changes to 0.
-# Let there be 2 text boxes next to it that read from transcript.txt and summary.txt respectively every 2 seconds.
-
 import tkinter as tk
-import threading
 import time
-import concurrent.futures
 
-class App(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        self.pack()
-        self.create_widgets()
-        self.recording = False
-        self.recording_thread = threading.Thread(target=self.record)
-        self.recording_thread.start()
+def update_transcript():
+    global transcript_text
+    # Open the transcript.txt file and read the contents
+    with open("transcript.txt", "r") as f:
+        transcript = f.read()
+    
+    # Delete the contents of the transcript_text widget
+    transcript_text.delete("1.0", tk.END)
+    transcript_text.insert(tk.END, transcript)
+    root.after(2000, update_transcript)
 
-    def create_widgets(self):
-        self.record_button = tk.Button(self, text="Record", command=self.record)
-        self.record_button.pack(side="top")
+def update_summary():
+    global summary_text
+    # Open the summary.txt file and read the contents
+    with open("summary.txt", "r") as f:
+        summary = f.read()
 
-        self.transcript_text = tk.Text(self, width=50, height=10)
-        self.transcript_text.pack(side="top")
+    summary_text.delete("1.0", tk.END)
+    summary_text.insert(tk.END, summary)
+    root.after(2000, update_summary)
 
-        self.summary_text = tk.Text(self, width=50, height=10)
-        self.summary_text.pack(side="top")
+def main():
+    global root, transcript_text, summary_text
+    root = tk.Tk()
+    root.title("ClaSSnap")
+    root.geometry("500x500")
 
-    def record(self):
-        if not self.recording:
-            self.recording = True
-            self.record_button["text"] = "Stop Recording"
-            with open("recording.txt", "w") as f:
-                f.write("1")
-            with concurrent.futures.ThreadPoolExecutor() as executor:
-                while self.recording:
-                    with open("transcript.txt", "r") as f:
-                        self.transcript_text.delete(1.0, tk.END)
-                        self.transcript_text.insert(tk.END, f.read())
-                    with open("summary.txt", "r") as f:
-                        self.summary_text.delete(1.0, tk.END)
-                        self.summary_text.insert(tk.END, f.read())
-                    time.sleep(2)
-        else:
-            self.recording = False
-            self.record_button["text"] = "Record"
-            with open("recording.txt", "w") as f:
-                f.write("0")
+    transcript_text = tk.Text(root, height=20, width=50)
+    transcript_text.pack(side=tk.LEFT)
 
-root = tk.Tk()
-app = App(master=root)
-app.mainloop()
+    summary_text = tk.Text(root, height=20, width=50)
+    summary_text.pack(side=tk.RIGHT)
+
+    # Run the update_transcript function every 2 seconds to update the transcript. Now make sure it runs at 2, 4, 6, 8, 10 seconds.
+    root.after(2000, update_transcript)
+    root.after(2000, update_summary)
+
+    root.mainloop()
