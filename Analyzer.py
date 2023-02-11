@@ -1,14 +1,17 @@
 import openai, whisper
 
 WAVE_OUTPUT_FILENAME = "output.wav"
-model = whisper.load_model("base.en")
 
+def load_model(model_name):
+    model = whisper.load_model(model_name)
+    return model
 
-def whisperStuff():
+def whisperStuff(model):
     # Read the audio data from the file into a numpy array
+    print("Begin whisper.")
     result = model.transcribe(WAVE_OUTPUT_FILENAME, language = "english")["text"]
     # print(result)
-
+    print("End whisper.")
     return result
 
 def summarize(transcript, num_points=3):
@@ -19,7 +22,7 @@ def summarize(transcript, num_points=3):
         openai.api_key = f.readline()
 
     # Define the text to input into the ChatGPT model
-    text = "Provide a " + str(num_points) + "-point very consise summary of the following transcript: " + transcript
+    text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + transcript
 
     # Use the OpenAI API to generate a response from the ChatGPT model
     response = openai.Completion.create(
@@ -28,14 +31,16 @@ def summarize(transcript, num_points=3):
         max_tokens=200,
         n=1,
         stop=None,
-        temperature=0.4,
+        temperature=0.3,
     )
 
     return response["choices"][0]["text"]
 
 
-def analyze():
-    result = whisperStuff()
+def analyze(model_name="base.en"):
+    model = load_model(model_name)
+    result = whisperStuff(model)
+    print(result)
     summary = summarize(result)
     print(summary)
     return summary
