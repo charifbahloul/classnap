@@ -1,7 +1,12 @@
 import pyaudio, wave
 
+CHUNK = 1024
+FORMAT = pyaudio.paInt16
+CHANNELS = 2
+RATE = 44100
+WAVE_OUTPUT_FILENAME = "output.wav"
 
-def record(FORMAT, CHANNELS, RATE, CHUNK, RECORD_SECONDS, WAVE_OUTPUT_FILENAME):
+def record(record_seconds=120):
     # create & configure microphone
     mic = pyaudio.PyAudio()
     stream = mic.open(format=FORMAT,
@@ -13,9 +18,10 @@ def record(FORMAT, CHANNELS, RATE, CHUNK, RECORD_SECONDS, WAVE_OUTPUT_FILENAME):
     # read & store microphone data per frame read
     frames = []
     print("Recording...")
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+    for i in range(0, int(RATE / CHUNK * record_seconds)):
         data = stream.read(CHUNK)
         frames.append(data)
+    print("Finished recording.")
 
     # kill the mic and recording
     stream.stop_stream()
