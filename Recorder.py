@@ -10,15 +10,12 @@ def record(FORMAT, CHANNELS, RATE, CHUNK, RECORD_SECONDS, WAVE_OUTPUT_FILENAME):
                     input=True,
                     frames_per_buffer=CHUNK)
 
-    print("* recording")
-
     # read & store microphone data per frame read
     frames = []
+    print("Recording...")
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK)
         frames.append(data)
-
-    print("* done recording")
 
     # kill the mic and recording
     stream.stop_stream()

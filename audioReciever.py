@@ -2,14 +2,15 @@ import pyaudio
 import whisper
 import numpy as np
 from Recorder import record
+from ChatGPTSummary import summarize
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-RECORD_SECONDS = 5
+RECORD_SECONDS = 15
 WAVE_OUTPUT_FILENAME = "output.wav"
-model = whisper.load_model("large_v2")
+model = whisper.load_model("base.en")
 
 def whisperStuff():
     # Read the audio data from the file into a numpy array
@@ -20,4 +21,5 @@ def whisperStuff():
 
 if __name__ == "__main__":
     record(FORMAT, CHANNELS, RATE, CHUNK, RECORD_SECONDS, WAVE_OUTPUT_FILENAME)
-    whisperStuff()
+    result = whisperStuff()
+    print(summarize(result))

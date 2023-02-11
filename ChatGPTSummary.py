@@ -1,22 +1,23 @@
 import openai
 
-# Initialize the API key for OpenAI
-openai.api_key = "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"
+def summarize(transcript):
+    # Initialize the API key for OpenAI
 
-transcript = "This is a lion. A lion is a beast. They are the kings of the jungle!"
+    # Open keys.txt and read the first line
+    with open("keys.txt", "r") as f:
+        openai.api_key = f.readline()
 
-# Define the text to input into the ChatGPT model
-text = "Provide a summary: " + transcript
+    # Define the text to input into the ChatGPT model
+    text = "Provide a 3-point very consise summary of the following transcript: " + transcript
 
-# Use the OpenAI API to generate a response from the ChatGPT model
-response = openai.Completion.create(
-    engine="text-davinci-002",
-    prompt=text,
-    max_tokens=1024,
-    n=1,
-    stop=None,
-    temperature=0.5,
-)
+    # Use the OpenAI API to generate a response from the ChatGPT model
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=text,
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.5,
+    )
 
-# Print the response from the ChatGPT model
-print(response["choices"][0]["text"])
+    return response["choices"][0]["text"]
