@@ -41,6 +41,13 @@ def analyze(model_name="base.en"):
     model = load_model(model_name)
     result = whisperStuff(model)
     print(result)
+    # Save the transcript to a text file
+    with open("transcript.txt", "a") as f:
+        f.write(result)
+
     summary = summarize(result)
     print(summary)
+    # Save the summary to a text file
+    with open("summary.txt", "a") as f:
+        f.write(summary)
     return summary
