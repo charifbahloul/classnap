@@ -10,12 +10,13 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor() as executor:
         try:
             while True:
-                record(10)
+                record(30)
 
                 # print("Simulating recording...")
                 # time.sleep(5)
             
                 future = executor.submit(analyze)
+                # analyze()
                 # all_results.append(future.result())
                 # print(future.result())
         except KeyboardInterrupt:
