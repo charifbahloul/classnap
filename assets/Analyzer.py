@@ -1,4 +1,4 @@
-import openai, whisper
+import openai, whisper, time
 
 def summarizer():
     words_transcribed = 0
@@ -8,8 +8,10 @@ def summarizer():
 
         transcript = transcript.split(" ")
         len_transcript = len(transcript)
+        print("Summary: " + str(len_transcript))
 
-        if len_transcript-words_transcribed > 250: # It's due for a summary.
+        if len_transcript-words_transcribed > 100: # It's due for a summary.
+            print("Summarizing...")
             summarize(transcript[words_transcribed:])
             words_transcribed = len_transcript
         
@@ -22,7 +24,7 @@ def summarize(transcript, num_points=3):
         openai.api_key = f.readline()
 
     # Define the text to input into the ChatGPT model
-    text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + transcript
+    text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + str(transcript)
 
     # Use the OpenAI API to generate a response from the ChatGPT model
     try:
@@ -37,6 +39,8 @@ def summarize(transcript, num_points=3):
         summary = response["choices"][0]["text"]
     except:
         summary = "Summarizer unavailable right now."
+
+    print("summarized")
 
     with open("files/summary.txt", "a") as f:
         f.write(summary)
@@ -53,3 +57,11 @@ def clear_files():
     with open("files/summary.txt", "w") as f:
         # f.write("First recording...\n\n")
         f.write("")
+
+def get_file_contents(file_path):
+    with open(file_path, "r") as f:
+        contents = f.read()
+    return contents.replace("\n\n", "\n")
+
+if __name__ == "__main__":
+    summarizer()

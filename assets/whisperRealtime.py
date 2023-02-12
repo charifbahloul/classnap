@@ -21,14 +21,14 @@ def transcribe(model):
             # load the speech recognizer with CLI settings
             r = sr.Recognizer()
             r.energy_threshold = 500
-            r.pause_threshold = .8 # When it decides to launch whisper.
-            r.dynamic_energy_threshold = False
+            r.pause_threshold = .5 # When it decides to launch whisper.
+            r.dynamic_energy_threshold = True
 
             # record audio stream into wav
             audio = r.listen(source)
             print("Finished one.")
             executor2.submit(actually_transcribe, model, audio) # So that I can continuously record.
-            print("af")
+
 
 def actually_transcribe(model, audio):
     start = datetime.datetime.now()
