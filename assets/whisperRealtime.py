@@ -13,7 +13,7 @@ def load_model(model_name='base.en'):
     return model
 
 def transcribe(model):
-    executor2 = concurrent.futures.ThreadPoolExecutor() # So that the clips have to get in line.
+    executor2 = concurrent.futures.ThreadPoolExecutor(max_workers=1) # So that the clips have to get in line.
 
     with sr.Microphone(sample_rate=16000) as source:
         print("Talking start.")
@@ -31,16 +31,11 @@ def transcribe(model):
             print("af")
 
 def actually_transcribe(model, audio):
-    print("a")
     start = datetime.datetime.now()
-    print("b")
 
     data = io.BytesIO(audio.get_wav_data())
-    print("c")
     audio_clip = AudioSegment.from_file(data)
-    print("d")
     audio_clip.export(WAVE_OUTPUT_FILENAME, format="wav")
-    print("e")
 
     result = model.transcribe(WAVE_OUTPUT_FILENAME, language='english')
 
