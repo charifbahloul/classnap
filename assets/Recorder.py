@@ -4,7 +4,7 @@ CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-WAVE_OUTPUT_FILENAME = "output.wav"
+WAVE_OUTPUT_FILENAME = "files/output.wav"
 
 def record(record_seconds=120):
     # create & configure microphone

@@ -1,6 +1,6 @@
 import openai, whisper
 
-WAVE_OUTPUT_FILENAME = "output.wav"
+WAVE_OUTPUT_FILENAME = "files/output.wav"
 
 def load_model(model_name):
     model = whisper.load_model(model_name)
@@ -10,10 +10,10 @@ def whisperStuff(model):
     # Read the audio data from the file into a numpy array
     print("Begin whisper.")
     result = model.transcribe(WAVE_OUTPUT_FILENAME, language = "english")["text"]
-    # print(result)
+    print(result)
     print("End whisper.")
 
-    with open("transcript.txt", "a") as f:
+    with open("files/transcript.txt", "a") as f:
         f.write(result[1:])
         f.write("\n\n")
 
@@ -21,12 +21,12 @@ def whisperStuff(model):
 
 def summarize(transcript, num_points=3):
     # Open keys.txt and read the first line
-    with open("keys.txt", "r") as f:
+    with open("files/keys.txt", "r") as f:
         openai.api_key = f.readline()
 
     # Take the last 250 characters of the transcript. If the transcript is less than 500 characters, take the whole transcript. If there are less than 50 characters, return an error.
     if len(transcript) < 50:
-        with open("summary.txt", "a") as f:
+        with open("files/summary.txt", "a") as f:
             f.write("Transcript is too short for now.")
             f.write("\n\n")
 
@@ -41,18 +41,20 @@ def summarize(transcript, num_points=3):
     text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + transcript
 
     # Use the OpenAI API to generate a response from the ChatGPT model
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=text,
-        max_tokens=200,
-        n=1,
-        stop=None,
-        temperature=0.3,
-    )
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=text,
+            max_tokens=200,
+            n=1,
+            stop=None,
+            temperature=0.3,
+        )
+        summary = response["choices"][0]["text"]
+    except:
+        summary = "Summarizer unavailable right now."
 
-    summary = response["choices"][0]["text"]
-
-    with open("summary.txt", "a") as f:
+    with open("files/summary.txt", "a") as f:
         f.write(summary)
         f.write("\n\n")
 
