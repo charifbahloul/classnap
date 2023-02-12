@@ -1,41 +1,25 @@
 import openai, whisper
 
-WAVE_OUTPUT_FILENAME = "files/output.wav"
+def summarizer():
+    words_transcribed = 0
+    while True:
+        with open("files/transcript.txt", "r") as f:
+            transcript = f.read()
 
-def load_model(model_name):
-    model = whisper.load_model(model_name)
-    return model
+        transcript = transcript.split(" ")
+        len_transcript = len(transcript)
 
-def whisperStuff(model):
-    # Read the audio data from the file into a numpy array
-    print("Begin whisper.")
-    result = model.transcribe(WAVE_OUTPUT_FILENAME, language = "english")["text"]
-    print(result)
-    print("End whisper.")
+        if len_transcript-words_transcribed > 250: # It's due for a summary.
+            summarize(transcript[words_transcribed:])
+            words_transcribed = len_transcript
+        
+        time.sleep(1)
 
-    with open("files/transcript.txt", "a") as f:
-        f.write(result[1:])
-        f.write("\n\n")
-
-    return result
 
 def summarize(transcript, num_points=3):
     # Open keys.txt and read the first line
     with open("files/keys.txt", "r") as f:
         openai.api_key = f.readline()
-
-    # Take the last 250 characters of the transcript. If the transcript is less than 500 characters, take the whole transcript. If there are less than 50 characters, return an error.
-    if len(transcript) < 50:
-        with open("files/summary.txt", "a") as f:
-            f.write("Transcript is too short for now.")
-            f.write("\n\n")
-
-        return "Error: transcript is too short."
-    elif len(transcript) < 250:
-        transcript = transcript
-    else:
-        transcript = transcript[-500:]
-
 
     # Define the text to input into the ChatGPT model
     text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + transcript
@@ -60,19 +44,12 @@ def summarize(transcript, num_points=3):
 
     return summary
 
-
-def open_file(file_name):
-    with open(file_name, "r") as f:
-        return f.read()
-
-# def analyze(model_name="base.en"):
-#     result = whisperStuff(model)
-#     print(result)
-#     # Save the transcript to a text file
-
-#     summary = summarize(result)
-#     print(summary)
-#     # Save the summary to a text file
-#     with open("summary.txt", "a") as f:
-#         f.write(summary)
-#     return summary
+def clear_files():
+    # Clear the transcript.txt file
+    with open("files/transcript.txt", "w") as f:
+        # f.write("First recording...\n\n")
+        f.write("")
+    # Clear the summary.txt file
+    with open("files/summary.txt", "w") as f:
+        # f.write("First recording...\n\n")
+        f.write("")

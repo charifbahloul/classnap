@@ -1,6 +1,7 @@
-from assets.Recorder import record
-from assets.Analyzer import open_file, whisperStuff, summarize, load_model
+# from assets.Recorder import record
+from assets.Analyzer import summarize, summarizer, clear_files
 from assets.tkinterFrontEnd import main as gui
+from assets.whisperRealtime import transcribe, load_model
 import concurrent.futures
 
 RECORDING_PERIOD = 2 # Record for x seconds
@@ -9,47 +10,18 @@ MODEL_NAME = "base.en" # It barely works with the base model. It needs alot of p
 model = load_model(MODEL_NAME)
 
 def main():
-    # Clear the transcript.txt file
-    with open("files/transcript.txt", "w") as f:
-        # f.write("First recording...\n\n")
-        f.write("")
-    # Clear the summary.txt file
-    with open("files/summary.txt", "w") as f:
-        # f.write("First recording...\n\n")
-        f.write("")
-
+    clear_files()
     executor = concurrent.futures.ThreadPoolExecutor()
 
-    # Start the GUI
-    executor.submit(gui)
+    # # Start the GUI
+    # executor.submit(gui)
 
-    counter = 0
-    while True:
-        record(RECORDING_PERIOD)
-        future = executor.submit(whisperStuff, model)
-        
-        if counter % SUMMARIZE_EVERY == 0 and counter != 0:
-            # Read all of the transcripts from the transcript.txt file
-            with open("files/transcript.txt", "r") as f:
-                transcript = f.readlines()
-            transcript = '\n'.join(transcript)
-            summarize(transcript, num_points=3)
+    # Start the transcriber.
+    executor.submit(transcribe, model) 
+    # transcribe(model)
 
-        if counter >= SUMMARIZE_EVERY*3:
-            # Delete the first summary.
-            with open("files/summary.txt", "r") as f:
-                summaries = f.read()
-            # Split it by \n\n.
-            summaries = summaries.split("\n\n")
-            # Delete the first element.
-            summaries = summaries[1:]
-            # Join it back together.
-            summaries = "\n\n".join(summaries)
-            # Write it back to the file.
-            with open("files/summary.txt", "w") as f:
-                f.writelines(summaries)
-
-        counter += 1
+    # # Start the summarizer.
+    # executor.submit(summarizer)
         
 if __name__ == "__main__":
     main()

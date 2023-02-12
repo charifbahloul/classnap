@@ -7,7 +7,7 @@ def update_transcript():
     with open("files/transcript.txt", "r") as f:
         transcript = f.read()
     
-    transcript = transcript.replace("\n\n", " ")
+    transcript = transcript.replace("\n\n", "\n")
     
     # Delete the contents of the transcript_text widget
     transcript_text.delete("1.0", tk.END)
