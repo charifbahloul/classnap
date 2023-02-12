@@ -1,2 +1,5 @@
 output.wav
 keys.txt
+transcript.txt
+summary.txt
+__pycache__/

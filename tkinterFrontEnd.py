@@ -7,8 +7,12 @@ def update_transcript():
     with open("transcript.txt", "r") as f:
         transcript = f.read()
     
+    transcript = transcript.replace("\n\n", " ")
+    
     # Delete the contents of the transcript_text widget
     transcript_text.delete("1.0", tk.END)
+    if len(transcript) > 1000: # If the transcript is longer than 1000 characters, take the last 1000 characters
+        transcript = transcript[-1000:]
     transcript_text.insert(tk.END, transcript)
     root.after(2000, update_transcript)
 
@@ -18,6 +22,8 @@ def update_summary():
     with open("summary.txt", "r") as f:
         summary = f.read()
 
+    # summary = summary.replace("\n\n", "\n")
+
     summary_text.delete("1.0", tk.END)
     summary_text.insert(tk.END, summary)
     root.after(2000, update_summary)
@@ -26,7 +32,7 @@ def main():
     global root, transcript_text, summary_text
     root = tk.Tk()
     root.title("ClaSSnap")
-    root.geometry("500x500")
+    root.geometry("1000x720")
 
     transcript_text = tk.Text(root, height=20, width=50)
     transcript_text.pack(side=tk.LEFT)

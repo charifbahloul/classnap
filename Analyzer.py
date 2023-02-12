@@ -14,16 +14,28 @@ def whisperStuff(model):
     print("End whisper.")
 
     with open("transcript.txt", "a") as f:
-        f.write(result)
+        f.write(result[1:])
+        f.write("\n\n")
 
     return result
 
 def summarize(transcript, num_points=3):
-    # Initialize the API key for OpenAI
-
     # Open keys.txt and read the first line
     with open("keys.txt", "r") as f:
         openai.api_key = f.readline()
+
+    # Take the last 250 characters of the transcript. If the transcript is less than 500 characters, take the whole transcript. If there are less than 50 characters, return an error.
+    if len(transcript) < 50:
+        with open("summary.txt", "a") as f:
+            f.write("Transcript is too short for now.")
+            f.write("\n\n")
+
+        return "Error: transcript is too short."
+    elif len(transcript) < 250:
+        transcript = transcript
+    else:
+        transcript = transcript[-500:]
+
 
     # Define the text to input into the ChatGPT model
     text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + transcript
@@ -42,6 +54,7 @@ def summarize(transcript, num_points=3):
 
     with open("summary.txt", "a") as f:
         f.write(summary)
+        f.write("\n\n")
 
     return summary
 
