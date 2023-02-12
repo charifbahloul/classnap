@@ -1,4 +1,3 @@
-import argparse
 import io
 from pydub import AudioSegment
 import speech_recognition as sr
