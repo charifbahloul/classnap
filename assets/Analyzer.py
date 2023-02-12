@@ -1,4 +1,4 @@
-import openai, time
+import openai, time, re
 
 def summarizer():
     words_transcribed = 0
@@ -24,7 +24,7 @@ def summarize(transcript, num_points=3):
         openai.api_key = f.readline()
 
     # Define the text to input into the ChatGPT model
-    text = "Assume you are a personal assistant. You are summarizing a part of a lecture for a student who's not paying attention. \nProvide a " + str(num_points) + "-point list with a newline for each point detailing a consise summary of the following transcript: " + str(transcript)
+    text = "Assume you are a personal assistant. You are summarizing a part of a lecture for a slacking student who's not paying attention. \nProvide a " + str(num_points) + "-point numbered list with a newline for each point detailing a consise summary of the following transcript: " + str(transcript)
 
     # Use the OpenAI API to generate a response from the ChatGPT model
     try:
@@ -58,13 +58,39 @@ def clear_files():
         # f.write("First recording...\n\n")
         f.write("")
 
-def get_file_contents(file_path, replace=True):
+def format_contents(contents, type_content):
+    if type_content == "summary":
+        new_contents = []
+        line_num = 0
+
+        for line in contents.split("\n"):
+            if line != "":
+                new_contents.append(line)
+
+        for line in new_contents:
+            if line_num % 3 == 2:
+                new_contents[line_num] += "<br>"
+            line_num += 1
+
+        contents = "<br>".join(new_contents)
+    elif type_content == "transcript":
+        contents = contents.split("\n\n")
+        contents = [content.replace("\n", " ") for content in contents]
+        contents = [content for content in contents if content != ""]
+
+        contents = "<br>".join(contents)
+    return contents
+
+def get_file_contents(file_path, type_content="transcript"):
     with open(file_path, "r") as f:
         contents = f.read()
-    if replace:
-        return contents.replace("\n\n", "\n")
-    else:
-        return contents
+    formatted_contents = format_contents(contents, type_content)
+    # Make sure it's not more than 15 lines (measured by <br> tags)
+    formatted_contents = formatted_contents.split("<br>")
+    if len(formatted_contents) > 15:
+        formatted_contents = formatted_contents[-15:]
+        formatted_contents = "<br>".join(formatted_contents)
+    return formatted_contents
 
 if __name__ == "__main__":
     summarizer()

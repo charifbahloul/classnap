@@ -24,7 +24,8 @@ def add_header(response): # I know this is brute force. But I like brute force.
 
 @app.route("/summary", methods=["GET"])
 def get_summary():
-    return get_file_contents("files/summary.txt", replace=False)
+    # return "1\n2\n3"
+    return get_file_contents("files/summary.txt", "summary")
 
 @app.route("/transcript", methods=["GET"])
 def get_transcript():
