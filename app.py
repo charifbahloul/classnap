@@ -3,13 +3,12 @@ import time
 import concurrent.futures
 from assets.Analyzer import summarize, summarizer, clear_files, get_file_contents
 from assets.whisperRealtime import transcribe, load_model
-import concurrent.futures
-import cv2
-import numpy as np
+# import cv2
+# import numpy as np
 
 RECORDING_PERIOD = 2 # Record for x seconds
 SUMMARIZE_EVERY = 3 # Summarize every x recordings. Shouldn't summarize more than once every minute.
-MODEL_NAME = "base.en" # It barely works with the base model. It needs alot of power. Otherwise, it gets overloaded with too many threads trying to transcribe and stops working or worse yet, comes out in the wrong order.
+MODEL_NAME = "tiny.en" # It barely works with the base model. It needs alot of power. Otherwise, it gets overloaded with too many threads trying to transcribe and stops working or worse yet, comes out in the wrong order.
 model = load_model(MODEL_NAME)
 
 app = Flask(__name__)
