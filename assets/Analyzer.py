@@ -24,7 +24,7 @@ def summarize(transcript, num_points=3):
         openai.api_key = f.readline()
 
     # Define the text to input into the ChatGPT model
-    text = "Assume you are a personal assistant. You are summzarizing a part of a lecture for your boss. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + str(transcript)
+    text = "Assume you are a personal assistant. You are summarizing a part of a lecture for a student who's not paying attention. \nProvide a " + str(num_points) + "-point list with a consise summary of the following transcript: " + str(transcript)
 
     # Use the OpenAI API to generate a response from the ChatGPT model
     try:
@@ -34,7 +34,7 @@ def summarize(transcript, num_points=3):
             max_tokens=200,
             n=1,
             stop=None,
-            temperature=0.3,
+            temperature=0.2,
         )
         summary = response["choices"][0]["text"]
     except:
@@ -58,10 +58,13 @@ def clear_files():
         # f.write("First recording...\n\n")
         f.write("")
 
-def get_file_contents(file_path):
+def get_file_contents(file_path, replace=True):
     with open(file_path, "r") as f:
         contents = f.read()
-    return contents.replace("\n\n", "\n")
+    if replace:
+        return contents.replace("\n\n", "\n")
+    else:
+        return contents
 
 if __name__ == "__main__":
     summarizer()

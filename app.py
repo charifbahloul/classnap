@@ -25,7 +25,7 @@ def add_header(response): # I know this is brute force. But I like brute force.
 
 @app.route("/summary", methods=["GET"])
 def get_summary():
-    return get_file_contents("files/summary.txt")
+    return get_file_contents("files/summary.txt", replace=False)
 
 @app.route("/transcript", methods=["GET"])
 def get_transcript():
@@ -48,13 +48,8 @@ def main():
 
     clear_files()
     executor = concurrent.futures.ThreadPoolExecutor()
-
-    # Start the GUI
-    # executor.submit(gui)
-
-    # # Start the summarizer.
+    # Start the summarizer.
     executor.submit(summarizer)
-
 
     # Start the transcriber. Wouldn't work.
     # executor.submit(transcribe, model) 
