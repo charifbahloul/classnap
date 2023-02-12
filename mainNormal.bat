@@ -5,9 +5,6 @@
 @REM Change into the directory of this batch file.
 cd %~dp0
 
-@REM Install the requirements.
-pip install -r requirements.txt --force-reinstall
-
 @REM Open openWebsite.bat so that the website opens.
 start openWebsite.bat
 
