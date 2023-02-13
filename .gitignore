@@ -1,2 +1,9 @@
-files/
+files/Classnap.ico
+files/keys.txt
+files/logo.jpg
+files/output.wav
+files/summary.txt
+files/transcript.txt
 __pycache__/
+build/
+mainNormal For Me.bat

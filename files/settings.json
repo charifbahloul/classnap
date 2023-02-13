@@ -1,0 +1,7 @@
+{
+    "model_name": "tiny.en",
+    "summarize_threshold": 100,
+    "max_tokens": 70,
+    "max_lines": 15,
+    "pause_threshold": 0.8
+}
