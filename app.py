@@ -3,8 +3,6 @@ import concurrent.futures
 from assets.Analyzer import summarizer
 import assets.FileOperations as fo
 from assets.whisperRealtime import transcribe, load_model
-# import cv2
-# import numpy as np
 
 app = Flask(__name__)
 
@@ -30,7 +28,6 @@ def get_transcript():
 
 def main():
     fo.get_settings()
-    print(fo.model_name, fo.summarize_threshold, fo.max_tokens, fo.max_lines, fo.pause_threshold, fo.api_key)
     fo.clear_files()
     model = load_model(fo.model_name)
 
@@ -39,9 +36,7 @@ def main():
 
     # Start the summarizer.
     executor.submit(summarizer, fo.api_key, fo.summarize_threshold, fo.max_tokens, fo.max_lines)
-
     transcribe(model, fo.pause_threshold)
- 
 
 if __name__ == "__main__":
     main()

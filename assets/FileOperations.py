@@ -52,7 +52,6 @@ def open_settings():
 def get_settings():
     settings = open_settings()
 
-    print(settings) # Dict
     # Assign the settings to variables with the appropriate type.
     for setting in settings.keys():
         if type(settings[setting]) == int:
@@ -60,5 +59,23 @@ def get_settings():
         else:
             globals()[setting] = settings[setting]
 
-    with open("files/keys.txt", "r") as f:
-        globals()["api_key"] = f.readline()
+    globals()["api_key"] = decode_api_key(globals()["api_key_encoded"])
+
+def encode_api_key(api_key): # Basic encoding so that the api key isn't visible in the code.
+    api_key = [ord(c) for c in api_key]
+
+    for a, y in enumerate(api_key):
+        api_key[a] = y ** 2
+    
+    return api_key
+
+def decode_api_key(api_key):
+    for a, y in enumerate(api_key):
+        api_key[a] = int(y ** 0.5)
+    
+    api_key = [chr(c) for c in api_key]
+
+    return "".join(api_key)
+
+if __name__ == "__main__":
+    get_settings()
