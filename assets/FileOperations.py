@@ -59,7 +59,7 @@ def get_settings():
         else:
             globals()[setting] = settings[setting]
 
-    globals()["api_key"] = decode_api_key(globals()["api_key_encoded"])
+    globals()["openai_api_key"] = decode_api_key(globals()["openai_api_key_encoded"])
 
 def encode_api_key(api_key): # Basic encoding so that the api key isn't visible in the code.
     api_key = [ord(c) for c in api_key]

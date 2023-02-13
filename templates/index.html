@@ -13,10 +13,6 @@
 
 <!-- Header -->
 <header class="w3-container w3-theme w3-padding" id="myHeader">
-  <!-- <div class="w3-left" style="width: 200px;">
-    <!-- Logo is in files/logo.jpg -->
-    <!-- <img id="logo" alt="logo" style="width: 200px; max-height: 200px;"/>
-  </div> -->
   <div class="w3-center" style="display: flex; align-items: center; justify-content: center;">
     <div>
       <h4>NAP IN CLASS</h4>
@@ -74,18 +70,51 @@ function initSummary() {
 
 setInterval(initSummary, 500);
 
-// function initLogo() {
-//     const logoFile = './logo';
+// Added for deepgram START
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      if (!MediaRecorder.isTypeSupported('audio/webm'))
+          return alert('Browser not supported')
 
-//     fetch(logoFile)
-//     .then(response => response.blob())
-//     .then(logo => {
-//     // Create an object URL from the logo data and set it as the source of the logo element
-//     const objectURL = URL.createObjectURL(logo);
-//     document.getElementById('logo').src = objectURL;
-//     })
-//     .catch(error => console.error('Error fetching logo: ${error})'));
-// }
+      const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'audio/webm',
+      })
+
+      const socket = new WebSocket('ws://localhost:5555/listen')
+
+      socket.onopen = () => {
+          document.querySelector('#status').textContent = 'Connected'
+          mediaRecorder.addEventListener('dataavailable', async (event) => {
+              if (event.data.size > 0 && socket.readyState == 1) {
+                  socket.send(event.data)
+              }
+      })
+      mediaRecorder.start(250)
+      }
+
+      socket.onmessage = (message) => {
+          const received = message.data
+          if (received) {
+
+        console.log(received);
+        document.querySelector('#transcript').textContent += ' ' + received;
+
+        // Append the received data to localStorage
+        const existing = localStorage.getItem('transcript') || '';
+        localStorage.setItem('transcript', existing + received + '\n');
+      }
+    };
+
+      socket.onclose = () => {
+        console.log({ event: 'onclose' })
+      }
+
+      socket.onerror = (error) => {
+        console.log({ event: 'onerror', error })
+      }
+
+    })
+// Added for deepgram end
+
 </script>
 
 <hr>
