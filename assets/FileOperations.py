@@ -56,10 +56,15 @@ def get_settings():
     for setting in settings.keys():
         if type(settings[setting]) == int:
             globals()[setting] = int(settings[setting])
+        elif type(settings[setting]) == "True" or type(settings[setting]) == "False":
+            globals()[setting] = bool(settings[setting])
+        elif type(settings[setting]) == float:
+            globals()[setting] = float(settings[setting])
         else:
             globals()[setting] = settings[setting]
 
-    globals()["api_key"] = decode_api_key(globals()["api_key_encoded"])
+    globals()["openai_api_key"] = decode_api_key(globals()["openai_api_key_encoded"])
+    globals()["deepgram_api_key"] = decode_api_key(globals()["deepgram_api_key_encoded"])
 
 def encode_api_key(api_key): # Basic encoding so that the api key isn't visible in the code.
     api_key = [ord(c) for c in api_key]

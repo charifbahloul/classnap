@@ -29,14 +29,20 @@ def get_transcript():
 def main():
     fo.get_settings()
     fo.clear_files()
-    model = load_model(fo.model_name)
+    if not fo.use_deepgram:
+        model = load_model(fo.model_name)
 
     executor = concurrent.futures.ThreadPoolExecutor()
     executor.submit(app.run)
 
     # Start the summarizer.
-    executor.submit(summarizer, fo.api_key, fo.summarize_threshold, fo.max_tokens, fo.max_lines)
-    transcribe(model, fo.pause_threshold)
+    executor.submit(summarizer, fo.openai_api_key, fo.summarize_threshold, fo.max_tokens, fo.max_lines)
+    
+    # Transcriber
+    if fo.use_deepgram:
+        transcribe(pause_threshold = fo.pause_threshold, deepgram_api_key = fo.deepgram_api_key)
+    else:
+        transcribe(model = model, pause_threshold = fo.pause_threshold, use_deepgram = fo.use_deepgram)
 
 if __name__ == "__main__":
     main()
