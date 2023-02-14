@@ -36,11 +36,11 @@ def main():
     executor.submit(app.run)
 
     # Start the summarizer.
-    executor.submit(summarizer, fo.openai_api_key, fo.summarize_threshold, fo.max_tokens, fo.max_lines)
+    executor.submit(summarizer, fo.openai_api_key, fo.prompt, fo.summarize_threshold, fo.max_tokens)
     
     # Transcriber
     if fo.use_deepgram:
-        transcribe(pause_threshold = fo.pause_threshold, deepgram_api_key = fo.deepgram_api_key)
+        transcribe(pause_threshold = fo.pause_threshold, deepgram_api_key = fo.deepgram_api_key, sound_threshold=fo.sound_threshold)
     else:
         transcribe(model = model, pause_threshold = fo.pause_threshold, use_deepgram = fo.use_deepgram)
 

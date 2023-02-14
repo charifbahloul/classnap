@@ -6,5 +6,7 @@
     "pause_threshold": 0.5,
     "openai_api_key_encoded": [13225, 11449, 2025, 2704, 11881, 9409, 11236, 10404, 2916, 14641, 5625, 6724, 13689, 3025, 12321, 14161, 10000, 7744, 6084, 2809, 4489, 7569, 12996, 7056, 2601, 4356, 11664, 9604, 11449, 4900, 5476, 14884, 14641, 5929, 12996, 2809, 5041, 7396, 14161, 4356, 3025, 6724, 5625, 5776, 7921, 4624, 4761, 12321, 11881, 7569, 6561],
     "deepgram_api_key_encoded": [9801, 3136, 2500, 2704, 9409, 9604, 9409, 2809, 2809, 3136, 2304, 10201, 2809, 2704, 9604, 9604, 9409, 9801, 10201, 2500, 10000, 3025, 2304, 2704, 2601, 2809, 3249, 2401, 2500, 2601, 9801, 9604, 9604, 9409, 2601, 3136, 3025, 2916, 9409, 9409],
-    "use_deepgram": "True"
+    "use_deepgram": "True",
+    "sound_threshold": 700,
+    "prompt": "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization for error-prone transcripts for lectures. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the error-prone transcript whilst retaining meaning and insight. The result is the shortest possible summary that retains all of the original meaning and context of the paragraph. The speaker is a teacher.\n\nExample\n\nParagraph:\n\n[TRANSCRIPT]\n\n CLASS TLDR NOTES: "
 }

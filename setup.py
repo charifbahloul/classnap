@@ -2,7 +2,7 @@ import cx_Freeze
 import sys
 sys.setrecursionlimit(5000)
 
-executables = [cx_Freeze.Executable("app.py", icon="files\Classnap.ico")]
+executables = [cx_Freeze.Executable("app.py", icon="static\Classnap.ico")]
 
 cx_Freeze.setup(
     name="Classnap",

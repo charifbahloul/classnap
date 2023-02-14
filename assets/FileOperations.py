@@ -2,11 +2,11 @@ import json
 
 def clear_files():
     # Clear the transcript.txt file
-    with open("files/transcript.txt", "w") as f:
+    with open("files/transcript.txt", "w", encoding="utf-8") as f:
         # f.write("First recording...\n\n")
         f.write("")
     # Clear the summary.txt file
-    with open("files/summary.txt", "w") as f:
+    with open("files/summary.txt", "w", encoding="utf-8") as f:
         # f.write("First recording...\n\n")
         f.write("")
 
@@ -44,7 +44,7 @@ def get_file_contents(file_path, type_content="transcript", max_lines=15):
     return "<br>".join(formatted_contents)
 
 def open_settings():
-    with open("files/settings.json", "r") as f:
+    with open("files/settings.json", "r", encoding="utf-8") as f:
         settings = json.load(f)
 
     return settings
