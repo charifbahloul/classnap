@@ -14,13 +14,22 @@ def format_contents(contents, type_content):
     if type_content == "summary":
         # Convert newlines to <br> tags
         contents = contents.replace("\n", "<br>")
+        contents = contents.split("<br>")
+        
+        # Flip the order of the summary
+        contents = contents[::-1]
+
+        contents = "<br><br>".join(contents)
 
     elif type_content == "transcript":
         contents = contents.split("\n")
         contents = [content.replace("\n", " ") for content in contents]
         contents = [content for content in contents if content != ""]
+        
+        # Flip the order of the transcript
+        contents = contents[::-1]
 
-        contents = "<br>".join(contents)
+        contents = "<br><br>".join(contents)
     return contents
 
 def get_file_contents(file_path, type_content="transcript"):

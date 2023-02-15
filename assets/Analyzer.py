@@ -1,26 +1,29 @@
-import openai, time
+import openai, time, traceback
 
 def summarizer(api_key, prompt, summarize_threshold=100, max_tokens=70):
     words_transcribed = 0
-    while True:
-        with open("files/transcript.txt", "r", encoding="utf-8") as f:
-            transcript = f.read()
+    try:
+        while True:
+            with open("files/transcript.txt", "r", encoding="utf-8") as f:
+                transcript = f.read()
 
-        transcript = transcript.split(" ")
-        len_transcript = len(transcript)
-
-        if len_transcript-words_transcribed > summarize_threshold: # It's due for a summary.
-            print("Summarizing...")
-            # Give it the transcript from the last summary to the current transcript.
-            new_transcript = []
-            if len_transcript <= 4*summarize_threshold:
-                new_transcript = transcript
-            else:
-                new_transcript = transcript[-4*summarize_threshold:]
-            summarize(new_transcript, api_key, prompt, max_tokens=max_tokens)
-            words_transcribed = len_transcript
-        
-        time.sleep(1)
+            transcript = transcript.split(" ")
+            len_transcript = len(transcript)
+            print(len_transcript, words_transcribed)
+            if len_transcript-words_transcribed > summarize_threshold: # It's due for a summary.
+                print("Summarizing...")
+                # Give it the transcript from the last summary to the current transcript.
+                new_transcript = []
+                if len_transcript <= 4*summarize_threshold:
+                    new_transcript = transcript
+                else:
+                    new_transcript = transcript[-4*summarize_threshold:]
+                summarize(new_transcript, api_key, prompt, max_tokens=max_tokens)
+                words_transcribed = len_transcript
+            
+            time.sleep(1)
+    except:
+        traceback.print_exc()
 
 def summarize(transcript, api_key, prompt, max_tokens=70):
     # Get openai api key
@@ -51,4 +54,4 @@ def summarize(transcript, api_key, prompt, max_tokens=70):
     return summary
 
 if __name__ == "__main__":
-    summarizer()
+    summarizer("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", "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization of very error-prone transcripts for a student who isn't listening. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the very error-prone transcript whilst retaining meaning and insight. The result is the shortest possible note that retains all of the original meaning and context of the error-prone transcript. The speaker is a teacher.\n\nExample\n\nParagraph:\n\n[TRANSCRIPT]\n\n CLASS TLDR NOTES: ")

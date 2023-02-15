@@ -40,7 +40,7 @@ def main():
     executor.submit(app.run)
 
     # Start the summarizer.
-    # executor.submit(summarizer, fo.openai_api_key, fo.prompt, fo.summarize_threshold, fo.max_tokens)
+    executor.submit(summarizer, fo.openai_api_key, fo.prompt, fo.summarize_threshold, fo.max_tokens)
     
     # Transcriber
     if fo.use_deepgram:
