@@ -6,7 +6,6 @@ import concurrent.futures
 import traceback
 from deepgram import Deepgram
 import asyncio
-import time
 
 WAVE_OUTPUT_FILENAME = "files/output.wav"
 
@@ -69,22 +68,19 @@ async def transcribe_deepgram(audio, deepgram_api_key):
     start = datetime.datetime.now()
     dg_client = Deepgram(deepgram_api_key)
     try:
-        data = io.BytesIO(audio.get_wav_data())
-        audio_clip = AudioSegment.from_file(data)
-        audio_clip.export(WAVE_OUTPUT_FILENAME, format="wav")
-
-        audio = open(WAVE_OUTPUT_FILENAME, 'rb')
+        # Convert to bytes.
+        audio_wav = audio.get_wav_data()
 
         # Set the source
-        source = {'buffer': audio, 'mimetype': "files/output.wav"}
+        source = {'buffer': audio_wav, 'mimetype': "audio/x-wav"}
 
-        result = await asyncio.create_task(dg_client.transcription.prerecorded(source, {'punctuate': False, "model": "whisper", "language": "en-US", "tier": "enhanced"}))
-        predicted_text = result["results"]['channels'][0]["alternatives"][0]["transcript"][1:]
+        result = await asyncio.create_task(dg_client.transcription.prerecorded(source, {'punctuate': False, "model": "meeting", "language": "en-US", "tier": "enhanced"}))
+        predicted_text = result["results"]['channels'][0]["alternatives"][0]["transcript"]
         print(predicted_text)
 
         with open("files/transcript.txt", "a", encoding="utf-8") as f:
             f.write(predicted_text) # Because it adds a wierd space.
-            f.write("\n\n")
+            f.write("\n")
 
         end = datetime.datetime.now()
         duration = end-start

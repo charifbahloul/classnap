@@ -12,36 +12,24 @@ def clear_files():
 
 def format_contents(contents, type_content):
     if type_content == "summary":
-        new_contents = []
-        line_num = 0
+        # Convert newlines to <br> tags
+        contents = contents.replace("\n", "<br>")
 
-        for line in contents.split("\n"):
-            if line != "":
-                new_contents.append(line)
-
-        for line in new_contents:
-            if line_num % 3 == 2:
-                new_contents[line_num] += "<br>"
-            line_num += 1
-
-        contents = "<br>".join(new_contents)
     elif type_content == "transcript":
-        contents = contents.split("\n\n")
+        contents = contents.split("\n")
         contents = [content.replace("\n", " ") for content in contents]
         contents = [content for content in contents if content != ""]
 
         contents = "<br>".join(contents)
     return contents
 
-def get_file_contents(file_path, type_content="transcript", max_lines=15):
-    with open(file_path, "r") as f:
+def get_file_contents(file_path, type_content="transcript"):
+    with open(file_path, "r", encoding="utf-8") as f:
         contents = f.read()
     formatted_contents = format_contents(contents, type_content)
-    # Make sure it's not more than 15 lines (measured by <br> tags)
-    formatted_contents = formatted_contents.split("<br>")
-    if len(formatted_contents) > max_lines:
-        formatted_contents = formatted_contents[-max_lines:]
-    return "<br>".join(formatted_contents)
+    # Make sure it's not more than 500 words
+    formatted_contents = formatted_contents.split(" ")
+    return " ".join(formatted_contents)
 
 def open_settings():
     with open("files/settings.json", "r", encoding="utf-8") as f:

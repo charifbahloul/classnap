@@ -6,6 +6,10 @@ from assets.whisperRealtime import transcribe, load_model
 
 app = Flask(__name__)
 
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -36,7 +40,7 @@ def main():
     executor.submit(app.run)
 
     # Start the summarizer.
-    executor.submit(summarizer, fo.openai_api_key, fo.prompt, fo.summarize_threshold, fo.max_tokens)
+    # executor.submit(summarizer, fo.openai_api_key, fo.prompt, fo.summarize_threshold, fo.max_tokens)
     
     # Transcriber
     if fo.use_deepgram:

@@ -22,48 +22,73 @@
 </header>
 
 <div class="w3-row-padding w3-center w3-margin-top">
-<div class="w3-half">
-  <div class="w3-card w3-container" style="min-height:460px">
-  <h3>Transcript</h3><br>
-  <p id="transcript"></p>
+  <div class="w3-half" style="display: inline-block; width: 49%; vertical-align: top; overflow-x: hidden;">
+    <div class="w3-card w3-container" style="min-height:460px; overflow-y: scroll; max-height: 460px; overflow-y: scroll; -ms-overflow-style: none; /* IE and Edge */ scrollbar-width: none; /* Firefox */ border-bottom: 1px solid #ccc">
+      <h3>Transcript</h3><br>
+      <p id="transcript"></p>
+    </div>
+  </div>
+  <div class="w3-half" style="display: inline-block; width: 49%; vertical-align: top; overflow-x: hidden;">
+    <div class="w3-card w3-container" style="min-height:460px; overflow-y: scroll; max-height: 460px; overflow-y: scroll; -ms-overflow-style: none; /* IE and Edge */ scrollbar-width: none; /* Firefox */ border-bottom: 1px solid #ccc">
+      <h3>Summary</h3><br>
+      <p id="summary"></p>
+    </div>
   </div>
 </div>
 
-<div class="w3-half">
-  <div class="w3-card w3-container" style="min-height:460px">
-  <h3>Summary</h3><br>
-  <p id="summary"></p>
-  </div>
-</div>
+<style>
+  /* hide the scrollbar */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+</style>
 
 </div>
 
 <script>
-function initTranscript() {
-    const transcriptFile = './transcript';
   
-    // Fetch the transcript from the local file
-    fetch(transcriptFile)
-      .then(response => response.text())
-      .then(transcript => {
-        // Update the transcript element with the new transcript
-        document.getElementById('transcript').innerHTML = transcript;
-      })
-      .catch(error => console.error(`Error fetching transcript: ${error}`));
-  }
+// scroll the transcript div to the bottom
+
+function initTranscript() {
+  const transcriptFile = './transcript';
+
+  fetch(transcriptFile)
+    .then(response => response.text())
+    .then(transcript => {
+      const transcriptElement = document.getElementById('transcript');
+      const isScrolledToBottom = transcriptElement.scrollHeight - transcriptElement.clientHeight <= transcriptElement.scrollTop + 1;
+
+      transcriptElement.innerHTML = transcript;
+
+      if (!isScrolledToBottom && transcriptElement.scrollHeight > transcriptElement.clientHeight) {
+        transcriptElement.scrollTop = transcriptElement.scrollHeight - transcriptElement.clientHeight;
+      }
+    })
+    .catch(error => console.error(`Error fetching transcript: ${error}`));
+}
 
   setInterval(initTranscript, 500);
 
 
-function initSummary() {
-    const summaryFile = './summary';
+  function initSummary() {
+  const summaryFile = './summary';
 
   // Fetch the summary from the local file
   fetch(summaryFile)
     .then(response => response.text())
     .then(summary => {
+      const summaryElement = document.getElementById('summary');
+      const isScrolledToBottom = summaryElement.scrollHeight - summaryElement.clientHeight <= summaryElement.scrollTop + 1;
+
       // Update the summary element with the new summary
-      document.getElementById('summary').innerHTML = summary;
+      summaryElement.innerHTML = summary;
+
+      // If the summary element isn't scrolled to the bottom and the new summary is different, scroll to the bottom
+      const newIsScrolledToBottom = summaryElement.scrollHeight - summaryElement.clientHeight <= summaryElement.scrollTop + 1;
+      const isNewSummaryDifferent = summaryElement.innerHTML !== summary;
+      if (!newIsScrolledToBottom && isNewSummaryDifferent) {
+        summaryElement.scrollTop = summaryElement.scrollHeight - summaryElement.clientHeight;
+      }
     })
     .catch(error => console.error(`Error fetching summary: ${error}`));
 }
@@ -75,7 +100,7 @@ setInterval(initSummary, 500);
 <hr>
 <div class="w3-center">
   <h2>Features</h2>
-  <p class="w3-large">Ever wanted to just nap in class? Well, with this you can! It'll automatically work so long as you allow mic access. Transcript might not be accurate.</p>
+  <p class="w3-large">Ever wanted to just nap in class? Well, with this you can! It'll automatically work so long as you allow mic access. Transcript is error-prone if you're not in the front :)</p>
 </div>
 <br>
 
