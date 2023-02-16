@@ -4,3 +4,6 @@ pydub==0.25.1
 SpeechRecognition==3.8.1
 whisper @ git+https://github.com/openai/whisper.git@f82bc59f5ea234d4b97fb2860842ed38519f7e65
 DateTime==4.3
+deepgram-sdk==2.3.0
+markupsafe==2.0.1
+pyaudio

@@ -9,7 +9,6 @@ def summarizer(api_key, prompt, summarize_threshold=100, max_tokens=70):
 
             transcript = transcript.split(" ")
             len_transcript = len(transcript)
-            print(len_transcript, words_transcribed)
             if len_transcript-words_transcribed > summarize_threshold: # It's due for a summary.
                 print("Summarizing...")
                 # Give it the transcript from the last summary to the current transcript.
