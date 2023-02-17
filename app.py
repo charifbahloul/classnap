@@ -5,6 +5,7 @@ import assets.FileOperations as fo
 from assets.whisperRealtime import transcribe, load_model
 
 app = Flask(__name__)
+print("Ctrl+Click here: http://127.0.0.1:5000")
 
 import logging
 log = logging.getLogger('werkzeug')

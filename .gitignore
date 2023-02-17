@@ -4,7 +4,8 @@ files/logo.jpg
 files/output.wav
 files/summary.txt
 files/transcript.txt
-__pycache__/
+__pycache__
 files/transcript_sample.txt
-Classnap 0.2
+Classnap 0.4.2
 .idea
+Classnap 0.4.2.zip
