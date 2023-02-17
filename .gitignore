@@ -5,11 +5,6 @@ files/output.wav
 files/summary.txt
 files/transcript.txt
 __pycache__/
-build/
-mainNormal For Me.bat
 files/transcript_sample.txt
-Release 0.1
-Release 0.2
 Classnap 0.2
-main.build
-main.dist
+.idea
