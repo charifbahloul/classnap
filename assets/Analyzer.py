@@ -1,7 +1,9 @@
-import openai, time, traceback
+import time, traceback
+from revChatGPT.V1 import Chatbot
 
-def summarizer(api_key, prompt, summarize_threshold=100, max_tokens=70):
+def summarizer(api_key, prompt, summarize_threshold=100):
     words_transcribed = 0
+    chatbot = Chatbot(config={"session_token": api_key}) # So that it's part of one convo. Api key really is session token.
     try:
         while True:
             with open("files/transcript.txt", "r", encoding="utf-8") as f:
@@ -17,33 +19,27 @@ def summarizer(api_key, prompt, summarize_threshold=100, max_tokens=70):
                     new_transcript = transcript
                 else:
                     new_transcript = transcript[-4*summarize_threshold:]
-                summarize(new_transcript, api_key, prompt, max_tokens=max_tokens)
+                new_transcript = " ".join(new_transcript)
+                summarize(chatbot, new_transcript, prompt)
                 words_transcribed = len_transcript
             
             time.sleep(1)
     except:
         traceback.print_exc()
 
-def summarize(transcript, api_key, prompt, max_tokens=70):
-    # Get openai api key
-    openai.api_key = api_key
+def summarize(chatbot, transcript, prompt):
+    prompt = prompt.replace("[TRANSCRIPT]", str(transcript))
 
     # Use the OpenAI API to generate a response from the ChatGPT model
     try:
-        print("prompt: ", prompt.replace("[TRANSCRIPT]", str(transcript)))
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt.replace("[TRANSCRIPT]", str(transcript)),
-            max_tokens=max_tokens,
-            n=1,
-            stop=None,
-            temperature=0.2
-        )
-        summary = response["choices"][0]["text"]
+        print("prompt: ", prompt)
+        for data in chatbot.ask(prompt):
+            summary = data["message"]
+
     except:
         summary = "Summarizer unavailable right now."
 
-    print("summarized")
+    print("Summary: ", summary)
     summary = summary.replace("\n\n", "\n")
 
     with open("files/summary.txt", "a", encoding="utf-8") as f:
@@ -53,4 +49,4 @@ def summarize(transcript, api_key, prompt, max_tokens=70):
     return summary
 
 if __name__ == "__main__":
-    summarizer("hi", "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization of very error-prone transcripts for a student who isn't listening. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the very error-prone transcript whilst retaining meaning and insight. The result is the shortest possible note that retains all of the original meaning and context of the error-prone transcript. The speaker is a teacher.\n\nExample\n\nParagraph:\n\n[TRANSCRIPT]\n\n CLASS TLDR NOTES: ")
+    summarizer("hi", "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization of error-prone transcripts of a lecture for a student who isn't listening. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the transcript whilst retaining meaning and insight. The result is the shortest possible note (approx. 3-5 points) that retains all of the original meaning and context of the transcript. The speaker is a teacher.\n\nParagraph:\n\n[TRANSCRIPT]\n\nCLASS TLDR NOTES: ")
