@@ -13,7 +13,7 @@ Transcribes what the teacher says and summarizes it in a way that is easy and *q
 5. It's much harder than it sounds!
 
 ## Usage (2 minutes max)
-1. Scroll to the top of the page and find the Releases tab on the right middle of the page (or click [here](https://bit.ly/3I6QhTM)).
+1. Scroll to the top of the page and find the Releases tab on the right middle of the page (or click [here](https://bit.ly/3S70xQg)).
 2. Download Classnap.0.2.zip.
 3. Extract the zip file.
 4. Run the main.exe file.
