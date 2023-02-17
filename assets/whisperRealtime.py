@@ -91,4 +91,4 @@ async def transcribe_deepgram(audio, deepgram_api_key):
 
 if __name__ == "__main__":
     # model = load_model()
-    transcribe(deepgram_api_key="0")
+    transcribe(deepgram_api_key="hi")
