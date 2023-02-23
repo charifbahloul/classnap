@@ -5,3 +5,4 @@ SpeechRecognition==3.8.1
 DateTime==4.3
 deepgram-sdk==2.3.0
 markupsafe==2.0.1
+revChatGPT==2.3.5
