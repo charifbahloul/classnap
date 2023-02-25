@@ -50,5 +50,4 @@ def main():
         transcribe(model = model, pause_threshold = fo.pause_threshold, use_deepgram = fo.use_deepgram)
 
 if __name__ == "__main__":
-    app.run()
     main()
