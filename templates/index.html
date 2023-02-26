@@ -47,11 +47,23 @@
 
 <script>
   
+// scroll the transcript div to the bottom
+
 function initTranscript() {
   const transcriptFile = './transcript';
 
   fetch(transcriptFile)
     .then(response => response.text())
+    .then(transcript => {
+      const transcriptElement = document.getElementById('transcript');
+      const isScrolledToBottom = transcriptElement.scrollHeight - transcriptElement.clientHeight <= transcriptElement.scrollTop + 1;
+
+      transcriptElement.innerHTML = transcript;
+
+      if (!isScrolledToBottom && transcriptElement.scrollHeight > transcriptElement.clientHeight) {
+        transcriptElement.scrollTop = transcriptElement.scrollHeight - transcriptElement.clientHeight;
+      }
+    })
     .catch(error => console.error(`Error fetching transcript: ${error}`));
 }
 
@@ -64,6 +76,20 @@ function initTranscript() {
   // Fetch the summary from the local file
   fetch(summaryFile)
     .then(response => response.text())
+    .then(summary => {
+      const summaryElement = document.getElementById('summary');
+      const isScrolledToBottom = summaryElement.scrollHeight - summaryElement.clientHeight <= summaryElement.scrollTop + 1;
+
+      // Update the summary element with the new summary
+      summaryElement.innerHTML = summary;
+
+      // If the summary element isn't scrolled to the bottom and the new summary is different, scroll to the bottom
+      const newIsScrolledToBottom = summaryElement.scrollHeight - summaryElement.clientHeight <= summaryElement.scrollTop + 1;
+      const isNewSummaryDifferent = summaryElement.innerHTML !== summary;
+      if (!newIsScrolledToBottom && isNewSummaryDifferent) {
+        summaryElement.scrollTop = summaryElement.scrollHeight - summaryElement.clientHeight;
+      }
+    })
     .catch(error => console.error(`Error fetching summary: ${error}`));
 }
 
