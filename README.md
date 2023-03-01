@@ -18,6 +18,7 @@ Transcribes what the teacher says and summarizes it in a way that is easy and *q
 3. Extract the zip file.
 4. Run the main.exe file.
 5. Relax and enjoy the nap!
+NOTE: If it doesn't summarize, then the session token has expired. Go to chat.openai.com and get the session token.
 
 ## How to run from source
 1. Clone the repository.

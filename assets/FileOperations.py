@@ -13,13 +13,11 @@ def clear_files():
 def format_contents(contents, type_content):
     if type_content == "summary":
         # Convert newlines to <br> tags
-        contents = contents.replace("\n", "<br>")
-        contents = contents.split("<br>")
+        contents = contents.split("\n")
         
         # Flip the order of the summary
         contents = contents[::-1]
-
-        contents = "<br><br>".join(contents)
+        contents = "<br>".join(contents)
 
     elif type_content == "transcript":
         contents = contents.split("\n")
