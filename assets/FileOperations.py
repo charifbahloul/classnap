@@ -58,7 +58,6 @@ def get_settings():
         else:
             globals()[setting] = settings[setting]
 
-    globals()["openai_api_key"] = decode_api_key(globals()["openai_api_key_encoded"])
     globals()["deepgram_api_key"] = decode_api_key(globals()["deepgram_api_key_encoded"])
 
 def encode_api_key(api_key): # Basic encoding so that the api key isn't visible in the code.
