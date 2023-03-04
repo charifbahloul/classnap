@@ -15,8 +15,15 @@ def format_contents(contents, type_content):
         # Convert newlines to <br> tags
         contents = contents.split("\n")
         
+        contents = [content.replace("\n", " ") for content in contents]
+        contents = [content for content in contents if content != ""]
+        
         # Flip the order of the summary
         contents = contents[::-1]
+
+        while len(contents) > 0 and contents[0] == " ":
+            contents = contents[1:]
+
         contents = "<br>".join(contents)
 
     elif type_content == "transcript":
@@ -26,6 +33,8 @@ def format_contents(contents, type_content):
         
         # Flip the order of the transcript
         contents = contents[::-1]
+        while len(contents) > 0 and contents[0] == " ":
+            contents = contents[1:]
 
         contents = "<br><br>".join(contents)
     return contents
