@@ -1,9 +1,9 @@
-openai==0.6.3
+openai==0.27.0
 Flask==2.2.3
 pydub==0.25.1
-SpeechRecognition==3.8.1
-DateTime==4.3
+SpeechRecognition==3.9.0
+DateTime==5.0
 deepgram-sdk==2.3.0
 markupsafe==2.1.2
-revChatGPT==2.3.5
+revChatGPT==3.0.9
 gunicorn==20.1.0
