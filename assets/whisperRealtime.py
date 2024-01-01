@@ -15,7 +15,7 @@ def load_model(model_name='base.en'):
     model = whisper.load_model(model_name)
     return model
 
-def transcribe(model="", pause_threshold=.5, deepgram_api_key = "", sound_threshold=700, use_deepgram=True):
+def transcribe(model="", pause_threshold=.5, deepgram_api_key = "", sound_threshold=700, use_deepgram=True, deepgram_model_name='nova'):    
     executor2 = concurrent.futures.ThreadPoolExecutor(max_workers=1) # So that the clips have to get in line.
 
     with sr.Microphone(sample_rate=16000) as source:
@@ -36,9 +36,9 @@ def transcribe(model="", pause_threshold=.5, deepgram_api_key = "", sound_thresh
                 # # Convert to thread.
                 executor2.submit(
                     asyncio.get_event_loop().run_until_complete,
-                    transcribe_deepgram(audio, deepgram_api_key)
+                    transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name)
                 )
-                # asyncio.run(transcribe_deepgram(audio, deepgram_api_key)) # So that I can continuously record.
+                # asyncio.run(transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name)) # So that I can continuously record.
             else:
                 executor2.submit(transcribe_whisper, model, audio)
 
@@ -64,7 +64,7 @@ def transcribe_whisper(model, audio):
         print("Big problem with transcribe_whisper.")
         traceback.print_exc()
 
-async def transcribe_deepgram(audio, deepgram_api_key):
+async def transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name='nova'):
     start = datetime.datetime.now()
     dg_client = Deepgram(deepgram_api_key)
     try:
@@ -74,7 +74,7 @@ async def transcribe_deepgram(audio, deepgram_api_key):
         # Set the source
         source = {'buffer': audio_wav, 'mimetype': "audio/x-wav"}
 
-        result = await asyncio.create_task(dg_client.transcription.prerecorded(source, {'punctuate': False, "model": "meeting", "language": "en-US", "tier": "enhanced"}))
+        result = await asyncio.create_task(dg_client.transcription.prerecorded(source, {'punctuate': True, "model": deepgram_model_name, "language": "en-US"}))
         predicted_text = result["results"]['channels'][0]["alternatives"][0]["transcript"]
         print(predicted_text)
 

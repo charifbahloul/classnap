@@ -3,9 +3,9 @@ import concurrent.futures
 from assets.Analyzer import summarizer
 import assets.FileOperations as fo
 from assets.whisperRealtime import transcribe, load_model
+import os
 
 app = Flask(__name__)
-print("Ctrl+Click here: http://127.0.0.1:5000")
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -34,7 +34,7 @@ def get_transcript():
 def main():
     fo.get_settings()
     fo.clear_files()
-    print("Please get the session token using this extension: https://chrome.google.com/webstore/detail/chatgpt-cookies/nnkcnhbioochcaoeofflcljhhpceoknl")
+    print("Please get the session token using this extension: https://chrome.google.com/webstore/detail/chatgpt-cookies/nnkcnhbioochcaoeofflcljhhpceoknl\n")
     print("Once installed, click on it and it will redirect you to ChatGPT. Click on the extension again and copy the session token.")
     print("Session token: ", end="")
     openai_api_key = input()
@@ -47,10 +47,16 @@ def main():
 
     # Start the summarizer.
     executor.submit(summarizer, openai_api_key, fo.prompt, fo.summarize_threshold)
+
+    try:
+        os.system("clear")  
+    except:
+        os.system("cls")
+    print("Ctrl+Click here: http://127.0.0.1:5000\n\n\n\n\n\n")
     
     # Transcriber
     if fo.use_deepgram:
-        transcribe(pause_threshold = fo.pause_threshold, deepgram_api_key = fo.deepgram_api_key, sound_threshold=fo.sound_threshold)
+        transcribe(pause_threshold = fo.pause_threshold, deepgram_api_key = fo.deepgram_api_key, sound_threshold=fo.sound_threshold, deepgram_model_name=fo.deepgram_model_name, use_deepgram = fo.deepgram_model_name)
     else:
         transcribe(model = model, pause_threshold = fo.pause_threshold, use_deepgram = fo.use_deepgram)
 
