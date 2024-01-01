@@ -34,10 +34,6 @@ def get_transcript():
 def main():
     fo.get_settings()
     fo.clear_files()
-    print("Please get the session token using this extension: https://chrome.google.com/webstore/detail/chatgpt-cookies/nnkcnhbioochcaoeofflcljhhpceoknl\n")
-    print("Once installed, click on it and it will redirect you to ChatGPT. Click on the extension again and copy the session token.")
-    print("Session token: ", end="")
-    openai_api_key = input()
 
     if not fo.use_deepgram:
         model = load_model(fo.model_name)
@@ -46,13 +42,14 @@ def main():
     executor.submit(app.run)
 
     # Start the summarizer.
-    executor.submit(summarizer, openai_api_key, fo.prompt, fo.summarize_threshold)
+    print(fo.prompt, fo.summarize_threshold)
+    executor.submit(summarizer, fo.prompt, fo.summarize_threshold)
 
-    try:
+    try: # Clear the screen.
         os.system("clear")  
     except:
         os.system("cls")
-    print("Ctrl+Click here: http://127.0.0.1:5000\n\n\n\n\n\n")
+    print("\n\nCtrl+Click here: http://127.0.0.1:5000\n\n\n\n\n\n")
     
     # Transcriber
     if fo.use_deepgram:

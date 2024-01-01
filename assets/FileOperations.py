@@ -1,7 +1,6 @@
 import json
 
 def clear_files():
-
     # Move the summary.txt file to the old_summaries.txt file.
     with open("files/summary.txt", "r", encoding="utf-8") as f:
         summary = f.read()
@@ -15,7 +14,14 @@ def clear_files():
     with open("files/transcript.txt", "r", encoding="utf-8") as f:
         transcript = f.read()
 
-    if transcript != "":
+    # Check if the transcript is just composed of spaces and newlines.
+    is_empty = True
+    for char in transcript:
+        if char != " " and char != "\n":
+            is_empty = False
+            break
+    
+    if not is_empty:
         with open("files/old_transcripts.txt", "a", encoding="utf-8") as f:
             f.write(transcript)
             f.write("\n\n")

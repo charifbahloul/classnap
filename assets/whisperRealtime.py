@@ -16,7 +16,7 @@ def load_model(model_name='base.en'):
     return model
 
 def transcribe(model="", pause_threshold=.5, deepgram_api_key = "", sound_threshold=700, use_deepgram=True, deepgram_model_name='nova'):    
-    executor2 = concurrent.futures.ThreadPoolExecutor(max_workers=1) # So that the clips have to get in line.
+    executor2 = concurrent.futures.ThreadPoolExecutor(max_workers=1) # So that the clips have to get in line (queue).
 
     with sr.Microphone(sample_rate=16000) as source:
         print("Talking start.")
