@@ -5,6 +5,7 @@ import assets.FileOperations as fo
 from assets.whisperRealtime import transcribe, load_model
 import os
 import logging
+import traceback
 
 app = Flask(__name__)
 version_number = "1.4.2"
@@ -48,7 +49,6 @@ def main():
     executor.submit(app.run, debug=False)
 
     # Start the summarizer.
-    main_logger.info("Prompt Base: " + str(fo.prompt))
     main_logger.info("Summarize Threshold: " + str(fo.summarize_threshold))
     executor.submit(summarizer, fo.prompt, main_logger, fo.summarize_threshold)
 
@@ -86,5 +86,6 @@ if __name__ == "__main__":
             main()
         except Exception as e:
             main_logger.critical("Main process is dead. Here's why: " + str(e))
+            main_logger.critical(traceback.format_exc())
             main_logger.info(str(attempt) + " tries left.")
             print("Critical error. Retrying...")

@@ -5,6 +5,7 @@ import datetime
 import concurrent.futures
 from deepgram import Deepgram
 import asyncio
+import traceback
 
 WAVE_OUTPUT_FILENAME = "files/output.wav"
 
@@ -33,7 +34,6 @@ def transcribe(
     main_logger.info("Talking start.")
     with sr.Microphone(sample_rate=16000) as source:
         while True:
-            main_logger.debug("Listening...")
             # load the speech recognizer with CLI settings
             r = sr.Recognizer()
             r.energy_threshold = sound_threshold
@@ -42,7 +42,6 @@ def transcribe(
 
             # record audio stream into wav
             audio = r.listen(source)
-            main_logger.debug("Finished one.")
             if use_deepgram:
                 # asyncio.set_event_loop(asyncio.new_event_loop())
                 # Converted to thread.
@@ -68,9 +67,10 @@ def transcribe_whisper(main_logger, model, audio):
         result = model.transcribe(WAVE_OUTPUT_FILENAME, language="english")
         predicted_text = result["text"][1:]
         main_logger.info(str(predicted_text))
-        with open("files/transcript.txt", "a", encoding="utf-8") as f:
-            f.write(predicted_text)  # Because it adds a wierd space.
-            f.write("\n\n")
+        if predicted_text != "":
+            with open("files/transcript.txt", "a", encoding="utf-8") as f:
+                f.write(predicted_text)  # Because it adds a wierd space.
+                f.write("\n\n")
 
         end = datetime.datetime.now()
         duration = end - start
@@ -111,8 +111,23 @@ async def transcribe_deepgram(
         main_logger.debug("Processing delay: " + str(duration))
     except Exception as e:
         main_logger.error("Transcribe_deepgram error: " + str(e))
+        main_logger.error(traceback.format_exc())
 
 
-# if __name__ == "__main__": # Before uncommenting this, remove main_logger.
-#     # model = load_model()
-#     transcribe(deepgram_api_key="hi")
+if __name__ == "__main__":
+    # model = load_model()
+
+    # Direct main_logger to print to console.
+    import logging
+
+    main_logger = logging.getLogger("main")
+    main_logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    main_logger.addHandler(handler)
+
+    transcribe(main_logger, deepgram_api_key="hi")

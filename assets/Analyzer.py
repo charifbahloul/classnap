@@ -1,4 +1,6 @@
 import time
+import datetime
+import traceback
 import g4f
 
 
@@ -14,17 +16,10 @@ def summarizer(prompt, main_logger, summarize_threshold=150):
 
             transcript = transcript.split(" ")
             len_transcript = len(transcript)
-            main_logger.debug(
-                "len_transcript: "
-                + str(len_transcript)
-                + "   words_summarized: "
-                + str(words_summarized)
-            )
 
             if (
                 len_transcript - words_summarized > summarize_threshold
             ):  # It's due for a summary.
-                main_logger.info("Summarizing...")
                 # Give it the transcript from the last summary to the current transcript.
                 new_transcript = []
                 if len_transcript <= 3 * summarize_threshold:
@@ -44,16 +39,24 @@ def summarizer(prompt, main_logger, summarize_threshold=150):
 def summarize(transcript, prompt, main_logger):
     prompt = prompt.replace("[TRANSCRIPT]", str(transcript))
     main_logger.info("Prompt: " + str(prompt))
+    start = datetime.datetime.now()
 
     # Use one of the APIs to generate a response from the Gpt3.5 model.
-    try:
-        summary = g4f.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
-        )
-    except Exception as e:
-        main_logger.error("API Error: " + str(e))
-        summary = "Summarizer unavailable right now."
+    for i in range(3):
+        try:
+            summary = g4f.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}]
+            )
+            break
+        except Exception as e:
+            main_logger.error("API Error: " + str(e))
+            main_logger.error(traceback.format_exc())
+            summary = "Summarizer unavailable right now."
+            time.sleep(2.5)
 
+    end = datetime.datetime.now()
+    duration = end - start
+    main_logger.debug("Processing delay: " + str(duration))
     main_logger.info("Summary: " + str(summary))
     summary = summary.replace("\n\n", "\n")
 
@@ -64,7 +67,20 @@ def summarize(transcript, prompt, main_logger):
     return summary
 
 
-# if __name__ == "__main__": # Before uncommenting this, remove main_logger.
-# summarizer(
-#     "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization of error-prone transcripts of a lecture for a student who isn't listening. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the transcript whilst retaining meaning and insight. The result is the shortest possible note (approx. 3-5 points) that retains all of the original meaning and context of the transcript. The speaker is a teacher.\n\nParagraph:\n\n[TRANSCRIPT]\n\nCLASS TLDR NOTES: "
-# )
+if __name__ == "__main__":
+    # Direct main_logger to print to console.
+    import logging
+
+    main_logger = logging.getLogger("main")
+    main_logger.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    main_logger.addHandler(handler)
+
+    summarizer(
+        "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization of error-prone transcripts of a lecture for a student who isn't listening. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the transcript whilst retaining meaning and insight. The result is the shortest possible note (approx. 3-5 points) that retains all of the original meaning and context of the transcript. The speaker is a teacher.\n\nParagraph:\n\n[TRANSCRIPT]\n\nCLASS TLDR NOTES: ", main_logger
+    )
