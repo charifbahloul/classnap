@@ -1,7 +1,6 @@
 {
     "model_name": "tiny.en",
-    "summarize_threshold": 5,
-    "max_tokens": 70,
+    "summarize_threshold": 150,
     "pause_threshold": 0.75,
     "use_deepgram": "True",
     "deepgram_model_name": "nova-2-ea",

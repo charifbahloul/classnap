@@ -4,12 +4,12 @@ from assets.Analyzer import summarizer
 import assets.FileOperations as fo
 from assets.whisperRealtime import transcribe, load_model
 import os
-
-app = Flask(__name__)
-
 import logging
 
-log = logging.getLogger("werkzeug")
+app = Flask(__name__)
+version_number = "1.4.2"
+
+log = logging.getLogger("werkzeug")  # To keep the console clean.
 log.setLevel(logging.ERROR)
 
 
@@ -45,29 +45,28 @@ def main():
         model = load_model(fo.model_name)
 
     executor = concurrent.futures.ThreadPoolExecutor()
-    executor.submit(app.run)
+    executor.submit(app.run, debug=False)
 
     # Start the summarizer.
-    print(fo.prompt, fo.summarize_threshold)
-    executor.submit(summarizer, fo.prompt, fo.summarize_threshold)
+    main_logger.info("Prompt Base: " + str(fo.prompt))
+    main_logger.info("Summarize Threshold: " + str(fo.summarize_threshold))
+    executor.submit(summarizer, fo.prompt, main_logger, fo.summarize_threshold)
 
-    try:  # Clear the screen.
-        os.system("clear")
-    except:
-        os.system("cls")
-    print("\n\nCtrl+Click here: http://127.0.0.1:5000\n\n\n\n\n\n")
+    print("\n\nCtrl+Click here: http://127.0.0.1:5000\n\n")
 
     # Transcriber
     if fo.use_deepgram:
         transcribe(
+            main_logger,
             pause_threshold=fo.pause_threshold,
             deepgram_api_key=fo.deepgram_api_key,
             sound_threshold=fo.sound_threshold,
             deepgram_model_name=fo.deepgram_model_name,
-            use_deepgram=fo.deepgram_model_name,
+            use_deepgram=fo.use_deepgram,
         )
     else:
         transcribe(
+            main_logger,
             model=model,
             pause_threshold=fo.pause_threshold,
             use_deepgram=fo.use_deepgram,
@@ -75,4 +74,17 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    path_to_files = os.path.join(os.path.dirname(__file__), "files")
+    main_logger = fo.setup_logger(
+        "main_logger", os.path.join(path_to_files, "main.log")
+    )
+    main_logger.info("\nProgram started. V" + str(version_number))
+    retries = 3
+
+    for attempt in range(retries):
+        try:
+            main()
+        except Exception as e:
+            main_logger.critical("Main process is dead. Here's why: " + str(e))
+            main_logger.info(str(attempt) + " tries left.")
+            print("Critical error. Retrying...")

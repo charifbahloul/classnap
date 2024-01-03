@@ -1,4 +1,5 @@
 import json
+import logging
 
 
 def clear_files():
@@ -120,6 +121,22 @@ def decode_api_key(api_key):
     api_key = [chr(c) for c in api_key]
 
     return "".join(api_key)
+
+
+def setup_logger(name, log_file, level=logging.DEBUG, include_level=True):
+    # To setup as many loggers as you want.
+    if include_level:
+        formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+    else:
+        formatter = logging.Formatter("%(asctime)s- %(message)s")
+    handler = logging.FileHandler(log_file, "a", "utf-8")
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
 
 
 if __name__ == "__main__":

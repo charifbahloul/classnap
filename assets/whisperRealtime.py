@@ -3,7 +3,6 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import datetime
 import concurrent.futures
-import traceback
 from deepgram import Deepgram
 import asyncio
 
@@ -19,6 +18,7 @@ def load_model(model_name="base.en"):
 
 
 def transcribe(
+    main_logger,
     model="",
     pause_threshold=0.5,
     deepgram_api_key="",
@@ -30,32 +30,34 @@ def transcribe(
         max_workers=1
     )  # So that the clips have to get in line (queue).
 
+    main_logger.info("Talking start.")
     with sr.Microphone(sample_rate=16000) as source:
-        print("Talking start.")
         while True:
-            print("Listening...")
+            main_logger.debug("Listening...")
             # load the speech recognizer with CLI settings
             r = sr.Recognizer()
             r.energy_threshold = sound_threshold
-            r.pause_threshold = pause_threshold  # When it decides to launch whisper.
+            r.pause_threshold = pause_threshold
             r.dynamic_energy_threshold = True
 
             # record audio stream into wav
             audio = r.listen(source)
-            print("Finished one.")
+            main_logger.debug("Finished one.")
             if use_deepgram:
                 # asyncio.set_event_loop(asyncio.new_event_loop())
-                # # Convert to thread.
+                # Converted to thread.
                 executor2.submit(
                     asyncio.get_event_loop().run_until_complete,
-                    transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name),
+                    transcribe_deepgram(
+                        audio, deepgram_api_key, main_logger, deepgram_model_name
+                    ),
                 )
                 # asyncio.run(transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name)) # So that I can continuously record.
             else:
-                executor2.submit(transcribe_whisper, model, audio)
+                executor2.submit(transcribe_whisper, main_logger, model, audio)
 
 
-def transcribe_whisper(model, audio):
+def transcribe_whisper(main_logger, model, audio):
     start = datetime.datetime.now()
 
     try:
@@ -65,20 +67,21 @@ def transcribe_whisper(model, audio):
 
         result = model.transcribe(WAVE_OUTPUT_FILENAME, language="english")
         predicted_text = result["text"][1:]
-        print(predicted_text)
+        main_logger.info(str(predicted_text))
         with open("files/transcript.txt", "a", encoding="utf-8") as f:
             f.write(predicted_text)  # Because it adds a wierd space.
             f.write("\n\n")
 
         end = datetime.datetime.now()
         duration = end - start
-        print("Processing delay: ", duration)
-    except:
-        print("Big problem with transcribe_whisper.")
-        traceback.print_exc()
+        main_logger.debug("Processing delay: " + str(duration))
+    except Exception as e:
+        main_logger.error("Transcribe_whisper error: " + str(e))
 
 
-async def transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name="nova"):
+async def transcribe_deepgram(
+    audio, deepgram_api_key, main_logger, deepgram_model_name="nova"
+):
     start = datetime.datetime.now()
     dg_client = Deepgram(deepgram_api_key)
     try:
@@ -97,20 +100,19 @@ async def transcribe_deepgram(audio, deepgram_api_key, deepgram_model_name="nova
         predicted_text = result["results"]["channels"][0]["alternatives"][0][
             "transcript"
         ]
-        print(predicted_text)
+        main_logger.info(str(predicted_text))
 
         with open("files/transcript.txt", "a", encoding="utf-8") as f:
-            f.write(predicted_text)  # Because it adds a wierd space.
+            f.write(predicted_text)
             f.write("\n")
 
         end = datetime.datetime.now()
         duration = end - start
-        print("Processing delay: ", duration)
-    except:
-        print("Big problem with transcribe_deepgram.")
-        traceback.print_exc()
+        main_logger.debug("Processing delay: " + str(duration))
+    except Exception as e:
+        main_logger.error("Transcribe_deepgram error: " + str(e))
 
 
-if __name__ == "__main__":
-    # model = load_model()
-    transcribe(deepgram_api_key="hi")
+# if __name__ == "__main__": # Before uncommenting this, remove main_logger.
+#     # model = load_model()
+#     transcribe(deepgram_api_key="hi")
