@@ -52,7 +52,7 @@ def main():
     main_logger.info("Summarize Threshold: " + str(fo.summarize_threshold))
     executor.submit(summarizer, fo.prompt, main_logger, fo.summarize_threshold)
 
-    print("\n\nCtrl+Click here: http://127.0.0.1:5000\n\n")
+    print("\n\nCopy and paste this link into your browser: http://127.0.0.1:5000\n\n")
 
     # Transcriber
     if fo.use_deepgram:
