@@ -5,20 +5,19 @@ Meaning 2: Class *Nap*- Nap in class.
 
 Transcribes what the teacher says and summarizes it in a way that is easy and *quick* to understand.
 
+## Installing (2 minutes max)
+1. Scroll to the top of the page and find the Releases tab on the middle and to the right side of the page and download Classnap.1.4.2.zip (or click [here](https://bit.ly/3vmLwTj)).
+2. Extract the zip file.
+3. Run the ClassNap.exe file.
+4. Go to http://127.0.0.1:5000/ in your browser.
+5. Relax and enjoy the nap!
+
 ## How it works
 1. The program listens to the teacher's voice using pyaudio.
 2. The program transcribes the teacher's voice using deepgram.
 3. The program summarizes the teacher's voice using ChatGPT.
 4. The program displays the summary on a web page using flask.
 5. It's much harder than it sounds!
-
-## Installing (2 minutes max)
-1. Scroll to the top of the page and find the Releases tab on the middle and to the right side of the page (or click [here](https://bit.ly/48JgdAB)).
-2. Download Classnap.0.2.zip.
-3. Extract the zip file.
-4. Run the ClassNap.exe file.
-5. Go to http://127.0.0.1:5000/ in your browser.
-6. Relax and enjoy the nap!
 
 ## How to run from source
 1. Clone the repository.
