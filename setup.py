@@ -1,5 +1,6 @@
 import cx_Freeze
 import sys
+
 sys.setrecursionlimit(5000)
 
 executables = [cx_Freeze.Executable("app.py")]
@@ -13,13 +14,15 @@ cx_Freeze.setup(
     description="Nap in class",
     options={
         "build_exe": {
-            "include_files": ['templates/index.html'],
+            "include_files": ["templates/index.html"],
             "bin_includes": [
-                ("C:/Users/shari/anaconda3/envs/ClassnapEnvironment/Lib/site-packages/curl_cffi.libs/libcurl-cbb416caa1dd01638554eab3f38d682d.dll"),
+                (
+                    "C:/Users/shari/anaconda3/envs/ClassnapEnvironment/Lib/site-packages/curl_cffi.libs/libcurl-cbb416caa1dd01638554eab3f38d682d.dll"
+                ),
             ],
-            "includes": ["curl_cffi"]
+            "includes": ["curl_cffi"],
         }
-    }
+    },
 )
 
 # To run, put the following in the terminal: python setup.py build
