@@ -13,12 +13,11 @@ Transcribes what the teacher says and summarizes it in a way that is easy and *q
 5. It's much harder than it sounds!
 
 ## Installing (2 minutes max)
-1. Scroll to the top of the page and find the Releases tab on the middle and to the right side of the page (or click [here](https://bit.ly/48JgdAB)).
-2. Download Classnap.0.2.zip.
-3. Extract the zip file.
-4. Run the ClassNap.exe file.
-5. Go to http://127.0.0.1:5000/ in your browser.
-6. Relax and enjoy the nap!
+1. Scroll to the top of the page and find the Releases tab on the middle and to the right side of the page and download Classnap.1.4.2.zip (or click [here](https://bit.ly/3vmLwTj)).
+2. Extract the zip file.
+3. Run the ClassNap.exe file.
+4. Go to http://127.0.0.1:5000/ in your browser.
+5. Relax and enjoy the nap!
 
 ## How to run from source
 1. Clone the repository.
