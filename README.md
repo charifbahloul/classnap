@@ -6,10 +6,10 @@ Meaning 2: Class *Nap*- Nap in class.
 Transcribes what the teacher says and summarizes it in a way that is easy and *quick* to understand.
 
 ## Installing (2 minutes max)
-1. Scroll to the top of the page and find the Releases tab on the middle and to the right side of the page and download Classnap.1.4.2.zip (or click [here](https://bit.ly/3vmLwTj)).
+1. Scroll to the top of the page and find the Releases tab on the middle and to the right side of the page and download Classnap.1.4.2.zip (or click [here](https://bit.ly/3RRewdo)).
 2. Extract the zip file.
 3. Run the ClassNap.exe file.
-4. Go to http://127.0.0.1:5000/ in your browser.
+4. Go to http://127.0.0.1:8000/ in your browser.
 5. Relax and enjoy the nap!
 
 ## How it works
