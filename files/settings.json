@@ -4,7 +4,7 @@
     "pause_threshold": 0.75,
     "use_deepgram": "True",
     "deepgram_model_name": "nova-2-ea",
-    "sound_threshold": 700,
+    "sound_threshold": 1000,
     "prompt": "We introduce CLASS TLDR NOTES generation, a new form of extreme summarization of error-prone transcripts of a lecture for a student who isn't listening. CLASS TLDR NOTES generation involves high source compression, removes stop words and summarizes the transcript whilst retaining meaning and insight. The result is the shortest possible set of bullet points (2-3 points) that retains all of the original meaning and context of the transcript. The speaker is a teacher. From now on, DO NOT REFER TO the method of generating the notes or include any text other than the 2-3 bullet points. Just reference the transcript and generate the notes.\n---\nTranscript:[TRANSCRIPT]\nCLASS TLDR NOTES: ",
     "deepgram_api_key_encoded": [9801, 3136, 2500, 2704, 9409, 9604, 9409, 2809, 2809, 3136, 2304, 10201, 2809, 2704, 9604, 9604, 9409, 9801, 10201, 2500, 10000, 3025, 2304, 2704, 2601, 2809, 3249, 2401, 2500, 2601, 9801, 9604, 9604, 9409, 2601, 3136, 3025, 2916, 9409, 9409]
 }
